@@ -36,12 +36,16 @@ int main(int argc, char *argv[]) {
   }
 
   auto totalMass = totalInertial.MassMatrix().Mass();
+  auto xCentreOfMass = xWeightedMass/totalMass;
+  auto yCentreOfMass = yWeightedMass/totalMass;
+  auto zCentreOfMass = zWeightedMass/totalMass;
+
   std::cout << "Total mass: " << totalMass << std::endl;
 
   std::cout << "Centre of mass: " << std::endl;
-  std::cout << "X: " << xWeightedMass/totalMass << std::endl;
-  std::cout << "Y: " << yWeightedMass/totalMass << std::endl;
-  std::cout << "Z: " << zWeightedMass/totalMass << std::endl;
+  std::cout << "X: " << xCentreOfMass << std::endl;
+  std::cout << "Y: " << yCentreOfMass << std::endl;
+  std::cout << "Z: " << zCentreOfMass << std::endl;
 
   return 0;
 }
