@@ -18,27 +18,21 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  auto totalInertial = ignition::math::Inertiald();
-  double xWeightedMass = 0;
-  double yWeightedMass = 0;
-  double zWeightedMass = 0;
+  ignition::math::Inertiald totalInertial;
 
   for (int i = 0; i < model->LinkCount(); i++) {
-    auto currentLinkInertial = model->LinkByIndex(i)->Inertial();
-    totalInertial += currentLinkInertial;
+    ignition::math::Pose3d linkPoseRelativeToModel;
+    auto errors = model->LinkByIndex(i)->SemanticPose().Resolve(linkPoseRelativeToModel, "__model__");
 
-    ignition::math::Pose3d pose;
-    if (model->LinkByIndex(i)->SemanticPose().Resolve(pose, "__model__").empty()) {
-      xWeightedMass += pose.Pos().X() * currentLinkInertial.MassMatrix().Mass();
-      yWeightedMass += pose.Pos().Y() * currentLinkInertial.MassMatrix().Mass();
-      zWeightedMass += pose.Pos().Z() * currentLinkInertial.MassMatrix().Mass();
-    }
+    auto currentLinkInertial = model->LinkByIndex(i)->Inertial();
+    currentLinkInertial.SetPose(linkPoseRelativeToModel * currentLinkInertial.Pose());
+    totalInertial += currentLinkInertial;
   }
 
   auto totalMass = totalInertial.MassMatrix().Mass();
-  auto xCentreOfMass = xWeightedMass/totalMass;
-  auto yCentreOfMass = yWeightedMass/totalMass;
-  auto zCentreOfMass = zWeightedMass/totalMass;
+  auto xCentreOfMass = totalInertial.Pose().Pos().X();
+  auto yCentreOfMass = totalInertial.Pose().Pos().Y();
+  auto zCentreOfMass = totalInertial.Pose().Pos().Z();
 
   std::cout << "Total mass: " << totalMass << std::endl;
 
