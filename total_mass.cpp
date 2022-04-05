@@ -41,5 +41,8 @@ int main(int argc, char *argv[]) {
   std::cout << "Y: " << yCentreOfMass << std::endl;
   std::cout << "Z: " << zCentreOfMass << std::endl;
 
+  std::cout << "Moment of Inertia: " << std::endl;
+  std::cout << totalInertial.Moi() << std::endl;
+
   return 0;
 }
