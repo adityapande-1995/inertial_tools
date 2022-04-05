@@ -5,7 +5,7 @@ To compile, source ignition installation first and then run:
 ```
 mkdir build
 cd build
-cmake ; make
+cmake ..; make
 ```
 
 ## Testing
